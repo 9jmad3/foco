@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+[x-cloak] {
+    display: none;
+}
+
+@keyframes brain-glow {
+  0%, 100% { opacity: .25; filter: none; }
+  40%      { opacity: .95; filter: drop-shadow(0 0 3px currentColor); }
+}
+
+@keyframes node-pulse {
+  0%, 100% { transform: scale(1); opacity: .45; }
+  45%      { transform: scale(1.6); opacity: 1; }
+}
+
+.foco-brain .brain-wave {
+  animation: brain-glow 2.8s ease-in-out infinite;
+}
+
+.foco-brain .brain-node {
+  transform-origin: center;
+  animation: node-pulse 2.8s ease-in-out infinite;
+}
+
+/* Desfase: parece “actividad” recorriendo el cerebro */
+.foco-brain .w1 { animation-delay: 0s; }
+.foco-brain .w2 { animation-delay: .25s; }
+.foco-brain .w3 { animation-delay: .5s; }
+.foco-brain .w4 { animation-delay: .75s; }
+.foco-brain .w5 { animation-delay: 1s; }
+.foco-brain .w6 { animation-delay: 1.25s; }
+
+.foco-brain .n1 { animation-delay: .15s; }
+.foco-brain .n2 { animation-delay: .55s; }
+.foco-brain .n3 { animation-delay: .95s; }
+.foco-brain .n4 { animation-delay: 1.35s; }
+
+/* Opcional: pausa al hover para que no distraiga */
+.group:hover .foco-brain .brain-wave,
+.group:hover .foco-brain .brain-node {
+  animation-play-state: paused;
+}
+
+/* Accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+  .foco-brain .brain-wave,
+  .foco-brain .brain-node {
+    animation: none;
+  }
+}
