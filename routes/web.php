@@ -23,6 +23,7 @@ Route::get('/next-steps', NextSteps::class)
     ->name('next.steps');
 
 Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/dashboard', fn () => redirect()->route('foco.today'));
     Route::get('/hoy', TodayFocus::class)->name('foco.today');
     Route::get('/plantillas', TemplatesManager::class)->name('foco.templates');
     Route::get('/ajustes', UserSettingsPage::class)->name('foco.settings');
