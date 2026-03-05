@@ -27,6 +27,8 @@ class LibraryBlocksManager extends Component
 
     public array $openNotes = []; // [id => bool]
 
+    public ?int $filterTypeId = null; // filtro por tipo
+
     public function toggleNotes(int $id): void
     {
         $this->openNotes[$id] = !($this->openNotes[$id] ?? false);
@@ -160,6 +162,9 @@ class LibraryBlocksManager extends Component
 
         $blocks = LibraryBlock::query()
             ->where('user_id', $userId)
+            ->when(!empty($this->filterTypeId), function ($q) {
+                $q->where('block_type_id', (int) $this->filterTypeId);
+            })
             ->with('blockType')
             ->orderBy('id', 'desc')
             ->get();
@@ -193,19 +198,24 @@ class LibraryBlocksManager extends Component
             ->get(['id','title','estimated_minutes','notes','block_type_id']);
 
         foreach ($blocks as $b) {
-    $id = (int) $b->id;
+            $id = (int) $b->id;
 
-    $this->editingTitle[$id]   ??= $b->title ?? '';
-    $this->editingMinutes[$id] ??= $b->estimated_minutes;
-    $this->editingTypeId[$id]  ??= $b->block_type_id;
+            $this->editingTitle[$id]   ??= $b->title ?? '';
+            $this->editingMinutes[$id] ??= $b->estimated_minutes;
+            $this->editingTypeId[$id]  ??= $b->block_type_id;
 
-    if (!array_key_exists($id, $this->editingNotes)) {
-        $this->editingNotes[$id] = (string) ($b->notes ?? '');
+            if (!array_key_exists($id, $this->editingNotes)) {
+                $this->editingNotes[$id] = (string) ($b->notes ?? '');
+            }
+
+            if (!array_key_exists($id, $this->openNotes)) {
+                $this->openNotes[$id] = !empty($this->editingNotes[$id]);
+            }
+        }
     }
 
-    if (!array_key_exists($id, $this->openNotes)) {
-        $this->openNotes[$id] = !empty($this->editingNotes[$id]);
-    }
-}
+    public function clearTypeFilter(): void
+    {
+        $this->filterTypeId = null;
     }
 }

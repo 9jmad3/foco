@@ -11,6 +11,8 @@ use App\Livewire\TemplateWeekAssigner;
 use App\Livewire\LibraryBlocksManager;
 use App\Livewire\WeekAssigner;
 use App\Livewire\NextSteps;
+use App\Livewire\TutorialLanding;
+use App\Livewire\WeekOverview;
 
 Route::get('/', function () {
     return redirect()->route('foco.today');
@@ -32,5 +34,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/plantillas/asignacion', TemplateWeekAssigner::class)->name('foco.assign');
     Route::get('/bloques', LibraryBlocksManager::class)->name('foco.library');
     Route::get('/semana', WeekAssigner::class)->name('foco.week');
+    Route::get('/semana/vista', WeekOverview::class)->name('foco.week.overview');
+    Route::get('/tutorial', TutorialLanding::class)->name('foco.tutorial');
+
 });
 

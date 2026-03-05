@@ -25,6 +25,10 @@
                         Semana
                     </x-nav-link>
 
+                    <x-nav-link href="{{ route('foco.week.overview') }}" :active="request()->routeIs('foco.week.overview')">
+                        Vista semanal
+                    </x-nav-link>
+
                     <x-nav-link href="{{ route('foco.library') }}" :active="request()->routeIs('foco.library*')">
                         Biblioteca
                     </x-nav-link>
@@ -39,6 +43,10 @@
 
                     <x-nav-link href="{{ route('next.steps') }}" :active="request()->routeIs('next.steps')">
                         Próximos pasos
+                    </x-nav-link>
+
+                    <x-nav-link href="{{ route('foco.tutorial') }}" :active="request()->routeIs('foco.tutorial')">
+                        Tutorial
                     </x-nav-link>
                 </div>
             </div>
@@ -176,6 +184,10 @@
                 Semana
             </x-responsive-nav-link>
 
+            <x-responsive-nav-link href="{{ route('foco.week.overview') }}" :active="request()->routeIs('foco.week.overview')">
+                Vista Semanal
+            </x-responsive-nav-link>
+
             <x-responsive-nav-link href="{{ route('foco.library') }}" :active="request()->routeIs('foco.library*')">
                 Biblioteca
             </x-responsive-nav-link>
@@ -190,6 +202,10 @@
 
             <x-responsive-nav-link href="{{ route('next.steps') }}" :active="request()->routeIs('next.steps')">
                 Próximos pasos
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link href="{{ route('foco.tutorial') }}" :active="request()->routeIs('foco.tutorial')">
+                Tutorial
             </x-responsive-nav-link>
         </div>
 

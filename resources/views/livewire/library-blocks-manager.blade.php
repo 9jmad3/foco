@@ -78,6 +78,29 @@
         </div>
     </div>
 
+    {{-- FILTRO --}}
+    <div class="rounded-2xl border border-gray-200 bg-white shadow-sm p-4 mb-4">
+        <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
+            <div class="sm:max-w-xs w-full">
+                <label class="block text-xs text-gray-600 mb-1">Filtrar por tipo</label>
+                <select wire:model.live="filterTypeId"
+                        class="w-full rounded-xl border border-gray-300 focus:ring-2 focus:ring-emerald-400">
+                    <option value="">Todos</option>
+                    @foreach ($types as $t)
+                        <option value="{{ $t->id }}">{{ $t->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            @if($filterTypeId)
+                <button type="button"
+                        wire:click="clearTypeFilter"
+                        class="rounded-xl px-3 py-2 text-sm font-semibold bg-gray-100 text-gray-900 hover:bg-gray-200">
+                    Quitar filtro
+                </button>
+            @endif
+        </div>
+    </div>
 
     <!-- LISTADO -->
     <div class="space-y-3">
