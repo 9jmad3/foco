@@ -29,12 +29,16 @@
                         Biblioteca
                     </x-nav-link>
 
-                    <x-nav-link href="{{ route('foco.settings') }}" :active="request()->routeIs('foco.settings')">
+                    {{-- <x-nav-link href="{{ route('foco.settings') }}" :active="request()->routeIs('foco.settings')">
                         Ajustes
-                    </x-nav-link>
+                    </x-nav-link> --}}
 
                     <x-nav-link href="{{ route('foco.how') }}" :active="request()->routeIs('foco.how')">
                         Cómo funciona
+                    </x-nav-link>
+
+                    <x-nav-link href="{{ route('next.steps') }}" :active="request()->routeIs('next.steps')">
+                        Próximos pasos
                     </x-nav-link>
                 </div>
             </div>
@@ -176,12 +180,16 @@
                 Biblioteca
             </x-responsive-nav-link>
 
-            <x-responsive-nav-link href="{{ route('foco.settings') }}" :active="request()->routeIs('foco.settings')">
+            {{-- <x-responsive-nav-link href="{{ route('foco.settings') }}" :active="request()->routeIs('foco.settings')">
                 Ajustes
-            </x-responsive-nav-link>
+            </x-responsive-nav-link> --}}
 
             <x-responsive-nav-link href="{{ route('foco.how') }}" :active="request()->routeIs('foco.how')">
                 Cómo funciona
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link href="{{ route('next.steps') }}" :active="request()->routeIs('next.steps')">
+                Próximos pasos
             </x-responsive-nav-link>
         </div>
 

@@ -43,6 +43,34 @@
                     {{ __('Log in') }}
                 </x-button>
             </div>
+
+            <div class="mt-6 border-t pt-4">
+                <div class="flex justify-center">
+                    <p class="text-sm text-gray-600 text-center">
+                        ¿No tienes cuenta?
+                        <a href="{{ route('register') }}"
+                        class="ml-1 font-medium text-emerald-600 hover:text-emerald-800 underline">
+                            Regístrate
+                        </a>
+                    </p>
+                </div>
+            </div>
+
+            <div class="mt-6 flex items-center">
+                <div class="flex-grow border-t border-gray-200"></div>
+                <span class="mx-4 text-xs text-gray-400 uppercase tracking-wider">
+                    Información
+                </span>
+                <div class="flex-grow border-t border-gray-200"></div>
+            </div>
+
+            <div class="text-center mt-4">
+                <a href="{{ route('foco.how') }}"
+                class="text-sm text-gray-500 hover:text-emerald-600 transition">
+                    ¿Qué es FOCO y cómo funciona?
+                </a>
+            </div>
+
         </form>
     </x-authentication-card>
 </x-guest-layout>

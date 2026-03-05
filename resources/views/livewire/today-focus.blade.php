@@ -149,99 +149,113 @@
                                             : 'border-gray-200 bg-white hover:bg-gray-50'
                                         }}">
 
-                                        <div class="flex items-start justify-between gap-4">
+                                        <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4">
 
-                                            <span class="inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-semibold {{ $priorityBadge }}">
-                                                {{ $priorityLabel }}
-                                            </span>
+    {{-- FILA 1 (móvil) / COLUMNA IZQ (sm): Badge --}}
+    <div class="flex items-center justify-between sm:justify-start">
+        <span class="inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-semibold {{ $priorityBadge }}">
+            {{ $priorityLabel }}
+        </span>
 
-                                            <button
-                                                type="button"
-                                                wire:click="toggleCompleted({{ $b['id'] }})"
-                                                class="text-left flex-1 min-w-0"
-                                            >
-                                                <div class="flex items-center gap-2">
-                                                    <span class="inline-block h-2.5 w-2.5 rounded-full"
-                                                          style="background-color: {{ $b['color'] }}"></span>
+        {{-- Acciones en móvil (a la derecha) --}}
+        <div class="flex items-center gap-1 shrink-0 sm:hidden">
+            @if(!empty($b['notes']))
+                <button type="button"
+                        x-on:click="$dispatch('foco-open-notes', { title: @js($b['title']), type: @js($b['type_name']), notes: @js($b['notes']) })"
+                        class="rounded-lg p-2 text-gray-400 hover:text-emerald-600 hover:bg-emerald-50"
+                        aria-label="Ver detalles" title="Ver detalles del bloque">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5">
+                        <path d="M10 3c-4.5 0-8 3.5-9 7 1 3.5 4.5 7 9 7s8-3.5 9-7c-1-3.5-4.5-7-9-7Zm0 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8Zm0-6.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5Z"/>
+                    </svg>
+                </button>
+            @endif
 
-                                                    <div class="text-gray-900 font-semibold leading-snug truncate">
-                                                        <span class="{{ $b['completed'] ? 'line-through text-gray-400' : '' }}">
-                                                            {{ $b['title'] }}
-                                                        </span>
-                                                    </div>
-                                                </div>
+            <button type="button"
+                    wire:click.stop="deleteBlock({{ $b['id'] }})"
+                    wire:confirm="¿Eliminar este bloque?"
+                    class="rounded-lg p-2 text-gray-400 hover:text-red-600 hover:bg-red-50"
+                    aria-label="Eliminar bloque" title="Eliminar bloque para este día">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16ZM7.22 7.22a.75.75 0 0 1 1.06 0L10 8.94l1.72-1.72a.75.75 0 1 1 1.06 1.06L11.06 10l1.72 1.72a.75.75 0 1 1-1.06 1.06L10 11.06l-1.72 1.72a.75.75 0 1 1-1.06-1.06L8.94 10 7.22 8.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+                </svg>
+            </button>
+        </div>
+    </div>
 
-                                                <div class="text-xs text-gray-500 mt-1">
-                                                    {{ $b['type_name'] }}
-                                                    @if(!is_null($b['estimated_minutes']))
-                                                        · {{ $b['estimated_minutes'] }} min
-                                                    @endif
-                                                </div>
+    {{-- COLUMNA CENTRAL (sm): Título + meta (clicable). En móvil ocupa toda la línea --}}
+    <button type="button"
+            wire:click="toggleCompleted({{ $b['id'] }})"
+            class="text-left w-full sm:flex-1 sm:min-w-0">
+        <div class="flex items-center gap-2">
+            <span class="inline-block h-2.5 w-2.5 rounded-full shrink-0"
+                  style="background-color: {{ $b['color'] }}"></span>
 
+            <div class="text-gray-900 font-semibold leading-snug break-words sm:truncate">
+                <span class="{{ $b['completed'] ? 'line-through text-gray-400' : '' }}">
+                    {{ $b['title'] }}
+                </span>
+            </div>
+        </div>
 
-                                            </button>
+        <div class="text-xs text-gray-500 mt-1">
+            {{ $b['type_name'] }}
+            @if(!is_null($b['estimated_minutes']))
+                · {{ $b['estimated_minutes'] }} min
+            @endif
+        </div>
+    </button>
 
-                                            {{-- Acción: Ver detalles --}}
-                                            @if(!empty($b['notes']))
-                                                <button
-                                                    type="button"
-                                                    x-on:click="$dispatch('foco-open-notes', {
-                                                        title: @js($b['title']),
-                                                        type:  @js($b['type_name']),
-                                                        notes: @js($b['notes'])
-                                                    })"
-                                                    class="shrink-0 rounded-lg p-2 text-gray-400 hover:text-emerald-600 hover:bg-emerald-50"
-                                                    aria-label="Ver detalles"
-                                                    title="Ver detalles del bloque"
-                                                >
-                                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                                        viewBox="0 0 20 20"
-                                                        fill="currentColor"
-                                                        class="h-5 w-5">
-                                                        <path d="M10 3c-4.5 0-8 3.5-9 7 1 3.5 4.5 7 9 7s8-3.5 9-7c-1-3.5-4.5-7-9-7Zm0 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8Zm0-6.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5Z"/>
-                                                    </svg>
-                                                </button>
-                                            @endif
+    {{-- COLUMNA DERECHA (sm): Acciones a la derecha --}}
+    <div class="hidden sm:flex items-center gap-1 shrink-0">
+        @if(!empty($b['notes']))
+            <button type="button"
+                    x-on:click="$dispatch('foco-open-notes', { title: @js($b['title']), type: @js($b['type_name']), notes: @js($b['notes']) })"
+                    class="rounded-lg p-2 text-gray-400 hover:text-emerald-600 hover:bg-emerald-50"
+                    aria-label="Ver detalles" title="Ver detalles del bloque">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5">
+                    <path d="M10 3c-4.5 0-8 3.5-9 7 1 3.5 4.5 7 9 7s8-3.5 9-7c-1-3.5-4.5-7-9-7Zm0 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8Zm0-6.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5Z"/>
+                </svg>
+            </button>
+        @endif
 
-                                            {{-- Acciones --}}
-                                            <button
-                                                type="button"
-                                                wire:click.stop="deleteBlock({{ $b['id'] }})"
-                                                wire:confirm="¿Eliminar este bloque?"
-                                                class="shrink-0 rounded-lg p-2 text-gray-400 hover:text-red-600 hover:bg-red-50"
-                                                aria-label="Eliminar bloque"
-                                                title="Eliminar bloque para este día"
-                                            >
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5">
-                                                    <path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16ZM7.22 7.22a.75.75 0 0 1 1.06 0L10 8.94l1.72-1.72a.75.75 0 1 1 1.06 1.06L11.06 10l1.72 1.72a.75.75 0 1 1-1.06 1.06L10 11.06l-1.72 1.72a.75.75 0 1 1-1.06-1.06L8.94 10 7.22 8.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
-                                                </svg>
-                                            </button>
-                                        </div>
+        <button type="button"
+                wire:click.stop="deleteBlock({{ $b['id'] }})"
+                wire:confirm="¿Eliminar este bloque?"
+                class="rounded-lg p-2 text-gray-400 hover:text-red-600 hover:bg-red-50"
+                aria-label="Eliminar bloque" title="Eliminar bloque para este día">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16ZM7.22 7.22a.75.75 0 0 1 1.06 0L10 8.94l1.72-1.72a.75.75 0 1 1 1.06 1.06L11.06 10l1.72 1.72a.75.75 0 1 1-1.06 1.06L10 11.06l-1.72 1.72a.75.75 0 1 1-1.06-1.06L8.94 10 7.22 8.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+            </svg>
+        </button>
+    </div>
+
+</div>
+
 
                                         {{-- Emojis (solo si completado) --}}
                                         @if($b['completed'])
-                                            <div class="mt-3 flex gap-2 text-lg">
-                                                @php
-                                                    $emotions = [
-                                                        'calm' => '😌',
-                                                        'good' => '🙂',
-                                                        'neutral' => '😐',
-                                                        'tired' => '😩',
-                                                        'frustrated' => '😤',
-                                                    ];
-                                                @endphp
+    <div class="mt-3 flex flex-wrap gap-2 text-lg">
+        @php
+            $emotions = [
+                'calm' => '😌',
+                'good' => '🙂',
+                'neutral' => '😐',
+                'tired' => '😩',
+                'frustrated' => '😤',
+            ];
+        @endphp
 
-                                                @foreach($emotions as $key => $emoji)
-                                                    <button
-                                                        type="button"
-                                                        wire:click="setEmotion({{ $b['id'] }}, '{{ $key }}')"
-                                                        class="transition {{ ($b['emotion'] ?? null) === $key ? 'scale-125' : 'opacity-50 hover:opacity-100' }}"
-                                                    >
-                                                        {{ $emoji }}
-                                                    </button>
-                                                @endforeach
-                                            </div>
-                                        @endif
+        @foreach($emotions as $key => $emoji)
+            <button
+                type="button"
+                wire:click="setEmotion({{ $b['id'] }}, '{{ $key }}')"
+                class="transition {{ ($b['emotion'] ?? null) === $key ? 'scale-125' : 'opacity-50 hover:opacity-100' }}"
+            >
+                {{ $emoji }}
+            </button>
+        @endforeach
+    </div>
+@endif
 
                                     </div>
                                 </div>

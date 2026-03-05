@@ -26,6 +26,28 @@
         <div class="min-h-screen bg-gray-100">
             @livewire('navigation-menu')
 
+            <div class="demo-banner">
+            ⚠️ Esta es una versión de pruebas de la aplicación. No introduzcas datos sensibles ni contraseñas que utilices en otros servicios.
+            </div>
+            <style>
+                .demo-banner{
+    position: sticky;
+    top: 64px; /* altura aproximada del menú */
+
+    background:#FEF3C7;
+    color:#92400E;
+
+    border-bottom:1px solid #FCD34D;
+
+    padding:10px 20px;
+    text-align:center;
+    font-size:14px;
+
+    z-index:40;
+}
+                </style>
+
+
             <!-- Page Heading -->
             @if (isset($header))
                 <header class="bg-white shadow">

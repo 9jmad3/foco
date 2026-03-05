@@ -98,8 +98,8 @@
                 <div class="space-y-2">
                     @forelse($sortedAssigned as $wb)
                         <div wire:key="weekday-block-row-{{ $wb['id'] }}"
-                                    class="rounded-xl border border-gray-200 bg-white p-3 flex items-center justify-between gap-3">
-                            <div class="min-w-0 flex-1">
+                            class="rounded-xl border border-gray-200 bg-white p-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                            <div class="min-w-0 w-full sm:flex-1">
                                 <div class="flex items-center gap-2">
                                     <span class="inline-block h-2.5 w-2.5 rounded-full"
                                           style="background-color: {{ $wb['color'] }}"></span>
@@ -117,25 +117,25 @@
                             </div>
 
                             {{-- Hora --}}
-                            <div class="shrink-0 flex items-center gap-2">
+                            <div class="w-full sm:w-auto flex items-center justify-between sm:justify-start gap-2">
                                 <span class="text-xs text-gray-500">Hora</span>
 
                                 <input
                                     wire:key="weekday-block-time-{{ $wb['id'] }}"
                                     type="time"
                                     value="{{ !empty($wb['start_time']) ? substr($wb['start_time'], 0, 5) : '' }}"
-                                    class="rounded-lg border border-gray-300 px-2 py-1 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400"
+                                    class="w-40 sm:w-36 rounded-lg border border-gray-300 px-2 py-1 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400"
                                     wire:change="updateStartTime({{ $wb['id'] }}, $event.target.value)"
                                 />
                             </div>
 
                             {{-- Prioridad --}}
-                            <div class="shrink-0 flex items-center gap-2">
+                            <div class="w-full sm:w-auto flex items-center justify-between sm:justify-start gap-2">
                                 <span class="text-xs text-gray-500">Prioridad</span>
 
                                 <select
                                     wire:key="weekday-block-priority-{{ $wb['id'] }}"
-                                    class="rounded-lg border border-gray-300 px-2 py-1 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400"
+                                    class="w-40 sm:w-44 rounded-lg border border-gray-300 px-2 py-1 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400"
                                     wire:change="updatePriority({{ $wb['id'] }}, $event.target.value)"
                                 >
                                     <option value="no_importante" {{ ($wb['priority'] ?? 'no_importante') === 'no_importante' ? 'selected' : '' }}>

@@ -10,6 +10,7 @@ use App\Livewire\TemplateBlocksManager;
 use App\Livewire\TemplateWeekAssigner;
 use App\Livewire\LibraryBlocksManager;
 use App\Livewire\WeekAssigner;
+use App\Livewire\NextSteps;
 
 Route::get('/', function () {
     return redirect()->route('foco.today');
@@ -17,6 +18,9 @@ Route::get('/', function () {
 
 Route::get('/como-funciona', HowItWorks::class)
     ->name('foco.how');
+
+Route::get('/next-steps', NextSteps::class)
+    ->name('next.steps');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/hoy', TodayFocus::class)->name('foco.today');
