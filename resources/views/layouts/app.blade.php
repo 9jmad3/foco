@@ -67,32 +67,6 @@
 
         @livewireScripts
 
-        <script>
-(async () => {
-  try {
-    // Desregistrar todos los Service Workers
-    if ('serviceWorker' in navigator) {
-      const regs = await navigator.serviceWorker.getRegistrations();
-      for (const reg of regs) {
-        await reg.unregister();
-      }
-    }
-
-    // Borrar Cache Storage (PWA/Workbox/etc)
-    if (window.caches) {
-      const keys = await caches.keys();
-      await Promise.all(keys.map(k => caches.delete(k)));
-    }
-
-    // Si quieres, fuerza recarga dura una vez
-    if (!sessionStorage.getItem('__sw_purged')) {
-      sessionStorage.setItem('__sw_purged', '1');
-      location.reload(true);
-    }
-  } catch (e) {}
-})();
-</script>
-
         {{-- <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
