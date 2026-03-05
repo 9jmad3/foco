@@ -16,9 +16,18 @@ class WeekAssigner extends Component
     /** cache simple para sidebar */
     public array $weekBlocks = []; // [weekday => array(items)]
 
+    protected $queryString = [
+        'activeWeekday' => ['as' => 'day'],
+    ];
+
     public function mount(): void
     {
         foreach (range(1, 7) as $d) $this->weekBlocks[$d] = [];
+
+        // 1..7 (Lun..Dom). Si no viene, usa hoy.
+        $day = (int) request()->get('day', now()->dayOfWeekIso);
+        $this->activeWeekday = max(1, min(7, $day));
+
         $this->loadWeekBlocks();
     }
 

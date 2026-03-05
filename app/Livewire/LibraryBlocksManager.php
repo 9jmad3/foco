@@ -22,10 +22,15 @@ class LibraryBlocksManager extends Component
     /** Edición inline */
     public array $editingTitle = [];   // [id => title]
     public array $editingMinutes = []; // [id => minutes]
-    /** ✅ Nuevo: notas en edición inline */
     public array $editingNotes = [];   // [id => notes]
     public array $editingTypeId = []; // [id => block_type_id]
 
+    public array $openNotes = []; // [id => bool]
+
+    public function toggleNotes(int $id): void
+    {
+        $this->openNotes[$id] = !($this->openNotes[$id] ?? false);
+    }
     /**
      * Crea un bloque en la biblioteca.
      * - Este bloque luego se asigna a días en "Semana tipo".
@@ -55,7 +60,7 @@ class LibraryBlocksManager extends Component
         $this->blockTitle = '';
         $this->blockEstimated = null;
         $this->blockNotes = null;
-
+        $this->primeEditingState();
         $this->dispatch('toast', message: 'Bloque creado');
     }
 
@@ -78,6 +83,9 @@ class LibraryBlocksManager extends Component
         $mins  = $this->editingMinutes[$id] ?? null;
         $notes = $this->editingNotes[$id] ?? null;
 
+        logger()->info('SAVE NOTES', ['title' => $title,'min' => $mins,'notes' => $notes]);
+
+
         $data = [];
 
         if (!is_null($title)) {
@@ -99,9 +107,15 @@ class LibraryBlocksManager extends Component
         $typeId = $this->editingTypeId[$id] ?? null;
         if (!is_null($typeId)) $data['block_type_id'] = (int) $typeId;
 
-        if (!$data) return;
+        logger()->info('SAVE NOTES', $data);
 
+        // if (!$data) return;
+        // logger()->info('SAVE NOTES', ['id'=>$id, 'notes'=>$notes]);
         $lb->update($data);
+
+        // mantener state alineado (por si trim convierte a null)
+        // $this->editingNotes[$id] = (string) ($lb->fresh()->notes ?? '');
+
 
         $this->dispatch('toast', message: 'Bloque actualizado');
     }
@@ -130,7 +144,7 @@ class LibraryBlocksManager extends Component
         });
 
         unset($this->editingTitle[$id], $this->editingMinutes[$id], $this->editingNotes[$id]);
-
+        $this->primeEditingState();
         $this->dispatch('toast', message: 'Bloque eliminado');
     }
 
@@ -151,16 +165,47 @@ class LibraryBlocksManager extends Component
             ->get();
 
         // Precarga campos de edición (solo si aún no están en el array)
-        foreach ($blocks as $b) {
-            $this->editingTitle[$b->id] ??= $b->title;
-            $this->editingMinutes[$b->id] ??= $b->estimated_minutes;
-            $this->editingNotes[$b->id] ??= $b->notes;
-            $this->editingTypeId[$b->id] ??= $b->block_type_id;
-        }
+        // foreach ($blocks as $b) {
+        //     $this->editingTitle[$b->id] ??= $b->title;
+        //     $this->editingMinutes[$b->id] ??= $b->estimated_minutes;
+        //     $this->editingNotes[$b->id] ??= $b->notes;
+        //     $this->editingTypeId[$b->id] ??= $b->block_type_id;
+        // }
 
         return view('livewire.library-blocks-manager', [
             'types' => $types,
             'blocks' => $blocks,
         ])->layout('layouts.app');
+    }
+
+    public function mount(): void
+    {
+        $this->primeEditingState();
+    }
+
+    private function primeEditingState(): void
+    {
+        $userId = Auth::id();
+
+        $blocks = LibraryBlock::query()
+            ->where('user_id', $userId)
+            ->orderBy('id', 'desc')
+            ->get(['id','title','estimated_minutes','notes','block_type_id']);
+
+        foreach ($blocks as $b) {
+    $id = (int) $b->id;
+
+    $this->editingTitle[$id]   ??= $b->title ?? '';
+    $this->editingMinutes[$id] ??= $b->estimated_minutes;
+    $this->editingTypeId[$id]  ??= $b->block_type_id;
+
+    if (!array_key_exists($id, $this->editingNotes)) {
+        $this->editingNotes[$id] = (string) ($b->notes ?? '');
+    }
+
+    if (!array_key_exists($id, $this->openNotes)) {
+        $this->openNotes[$id] = !empty($this->editingNotes[$id]);
+    }
+}
     }
 }

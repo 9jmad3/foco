@@ -4,7 +4,23 @@
      wire:poll.10s="pollRefresh">
     <div class="flex items-end justify-between mb-6">
         <div>
+
+            @php
+                $todayText = \Carbon\Carbon::now()->locale('es')->isoFormat('dddd D [de] MMMM');
+            @endphp
+
             <div class="text-2xl font-semibold tracking-wide text-gray-900">FOCO</div>
+
+
+            <div class="text-sm text-gray-600 mt-1">
+                @if($completed === $total && $total > 0)
+                    ✅ Buen trabajo hoy, {{ ucfirst($todayText) }}.
+                @else
+                    👋 Hola, {{ ucfirst($todayText) }}. Este es tu plan para hoy.
+                @endif
+            </div>
+
+
             <div class="text-sm text-gray-500 mt-1">
                 Hoy · {{ $completed }} / {{ $total }}
                 @if($total > 0 && $completed === $total)
@@ -24,29 +40,64 @@
             wire:click="reapplyTodayTemplate"
             class="text-gray-600 hover:text-gray-900 underline underline-offset-4"
         >
-            Resetear desde semana tipo
+            Aplicar mi semana tipo a hoy
         </button>
     </div>
 
-    @if(!$total)
-        <div class="rounded-2xl border border-gray-200 bg-white shadow-sm p-6">
-            <div class="font-medium text-gray-900 mb-1">Sin bloques para hoy</div>
-            <div class="text-sm text-gray-600">
-                Ve a “Semana tipo” y asigna bloques al día de hoy.
-            </div>
+   @if(!$total)
+    @php
+        $todayText = \Carbon\Carbon::now()->locale('es')->isoFormat('dddd D [de] MMMM');
+    @endphp
 
-            <div class="mt-4 flex flex-wrap gap-3">
-                <a href="{{ route('foco.week') }}"
-                   class="inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-medium bg-emerald-600 text-white hover:bg-emerald-700">
-                    Ir a Semana tipo
-                </a>
-                <a href="{{ route('foco.library') }}"
-                   class="inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-medium bg-gray-100 text-gray-900 hover:bg-gray-200">
-                    Biblioteca
-                </a>
+    <div class="rounded-2xl border border-gray-200 bg-white shadow-sm p-6">
+        <div class="flex items-start gap-3">
+            <div class="text-2xl leading-none">👋</div>
+            <div class="min-w-0">
+                <div class="font-semibold text-gray-900">
+                    Bienvenido, {{ ucfirst($todayText) }}
+                </div>
+
+                <div class="mt-1 text-sm text-gray-600">
+                    Hoy aún no tienes bloques asignados.
+                    Para empezar, configura tu día (se hace desde <span class="font-medium">Semana tipo</span>) y luego vuelve aquí para ir completándolos.
+                </div>
             </div>
         </div>
-    @else
+
+        <div class="mt-4 rounded-xl bg-gray-50 border border-gray-200 p-4">
+            <div class="text-sm font-semibold text-gray-900">Cómo empezar (30 segundos)</div>
+            <ol class="mt-2 space-y-1 text-sm text-gray-700 list-decimal list-inside">
+                <li>Pulsa <span class="font-medium">Configurar hoy</span> y asigna algunos bloques al día de hoy.</li>
+                <li>Vuelve a esta pantalla y márcalos como completados cuando los hagas.</li>
+            </ol>
+            <div class="mt-2 text-xs text-gray-500">
+                Consejo: con 3–6 bloques es perfecto para empezar.
+            </div>
+        </div>
+
+        <div class="mt-5 flex flex-col sm:flex-row flex-wrap gap-3">
+            <a href="{{ route('foco.week', ['day' => now()->dayOfWeekIso]) }}"
+               class="inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-semibold bg-emerald-600 text-white hover:bg-emerald-700">
+                Configurar hoy
+            </a>
+
+            <a href="{{ route('foco.library') }}"
+               class="inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-semibold bg-white text-gray-900 border border-gray-200 hover:bg-gray-50">
+                Ver biblioteca
+            </a>
+
+            {{-- <a href="{{ route('foco.tutorial') }}" --}}
+            <a
+               class="inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-semibold bg-gray-100 text-gray-900 hover:bg-gray-200">
+                Ver tutorial
+            </a>
+        </div>
+
+        <div class="mt-4 text-xs text-gray-500">
+            Si vas con prisa: asigna 1 bloque importante + 1 ligero + 1 autocuidado. Y listo.
+        </div>
+    </div>
+@else
 
         @php
             /**
