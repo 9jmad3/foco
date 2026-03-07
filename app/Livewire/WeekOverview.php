@@ -24,13 +24,13 @@ class WeekOverview extends Component
     {
         // ISO: lunes=1 ... domingo=7
         return [
-            ['weekday' => 1, 'label' => 'Lun'],
-            ['weekday' => 2, 'label' => 'Mar'],
-            ['weekday' => 3, 'label' => 'Mié'],
-            ['weekday' => 4, 'label' => 'Jue'],
-            ['weekday' => 5, 'label' => 'Vie'],
-            ['weekday' => 6, 'label' => 'Sáb'],
-            ['weekday' => 7, 'label' => 'Dom'],
+            ['weekday' => 1, 'label' => 'Lunes'],
+            ['weekday' => 2, 'label' => 'Martes'],
+            ['weekday' => 3, 'label' => 'Miércoles'],
+            ['weekday' => 4, 'label' => 'Jueves'],
+            ['weekday' => 5, 'label' => 'Viernes'],
+            ['weekday' => 6, 'label' => 'Sábado'],
+            ['weekday' => 7, 'label' => 'Domíngo'],
         ];
     }
 
